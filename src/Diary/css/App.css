@@ -1,0 +1,39 @@
+.app_bg {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    /* background-color: red !important; */
+}
+
+.app_bg .main {
+    position: relative;
+    /* height: 100vh; */
+    /* top: 13vh; */
+    padding-top: 14vh;
+    background-color: blueviolet;
+    background-color: var(--bs-light);
+}
+
+
+/* footer */
+
+.footer {
+    position: relative;
+    height: 5vh;
+    background-color: rgb(216, 209, 209);
+    text-align: center;
+    margin-top: auto;
+    /* top: 13vh; */
+}
+
+.footer p {
+    line-height: 30px;
+}
+
+@media screen and (max-width: 480px) {
+    .app_bg .main {
+        /* padding-top: 22vh; */
+    }
+}

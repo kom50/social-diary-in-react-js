@@ -1,0 +1,23 @@
+/* main background */
+
+
+/* .bg_main {
+    display: flex;
+    flex-direction: column;
+} */
+
+
+/* main container */
+
+
+/* Notes  */
+
+.notes {
+    margin-top: 5px;
+    position: relative;
+}
+
+.show_notes {
+    /* overflow-y: auto; */
+    /* height: 75vh; */
+}
