@@ -100,20 +100,20 @@ const Login = () => {
 										onChange={changeHandler}
 										required
 									/>
-									<label forhtml="username">Enter username </label>
+									<label htmlFor="username">Enter username </label>
 								</div>
 
 								<div className="form-floating mt-4">
 									<input
 										className="form-control"
-										type="text"
+										type="password"
 										name="password"
 										placeholder="password"
 										value={user.password}
 										onChange={changeHandler}
 										required
 									/>
-									<label forhtml="password">Enter password </label>
+									<label htmlFor="password">Enter password </label>
 								</div>
 								<div>
 									<button

@@ -106,7 +106,7 @@ const CreateAccount = () => {
 							<div className="form-floating mt-4">
 								<input
 									className="form-control"
-									type="text"
+									type="password"
 									name="password"
 									placeholder="pass"
 									value={newUser.password}
@@ -118,14 +118,14 @@ const CreateAccount = () => {
 							<div className="form-floating mt-4">
 								<input
 									className="form-control"
-									type="text"
+									type="password"
 									name="re_password"
 									placeholder="email"
 									value={newUser.re_password}
 									onChange={changeHandler}
 									required
 								/>
-								<label htmlFor="re_password">Enter re-password </label>
+								<label htmlFor="re_password">Enter confirm password </label>
 							</div>
 							<div>
 								<button

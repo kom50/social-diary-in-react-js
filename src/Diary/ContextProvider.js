@@ -105,7 +105,11 @@ const ContextStore = (props) => {
 			const res = await axios.get('/users.json');
 			const data = [];
 			for (let key in res.data) {
-				data.push({ username: res.data[key].username, id: key });
+				data.push({
+					username: res.data[key].username,
+					password: res.data[key].password,
+					id: key,
+				});
 			}
 			setUsers([...data]);
 			console.log('all users ', data);
