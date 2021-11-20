@@ -49,6 +49,7 @@ const ContextStore = (props) => {
 					setUsers([...users, { ...data, id: res.data.name }]);
 					console.log('Account successfully created');
 					Toast.makeToast('Account successfully created', Toast.LONG);
+					// set initial value
 					setNewUser({
 						username: '',
 						name: '',
@@ -104,7 +105,7 @@ const ContextStore = (props) => {
 			const res = await axios.get('/users.json');
 			const data = [];
 			for (let key in res.data) {
-				data.push({ ...res.data[key], id: key });
+				data.push({ username: res.data[key].username, id: key });
 			}
 			setUsers([...data]);
 			console.log('all users ', data);
@@ -128,8 +129,6 @@ const ContextStore = (props) => {
 			for (let key in res.data) {
 				temp_username.push(key); // user name
 			}
-			console.log('temp_username ', temp_username);
-			console.log(res.data['jay']['notes'], ' l ', users.length);
 			const data = [];
 			// for (let i = 0; i < Object.keys(res.data).length; i++) {
 			for (let u_name in res.data) {

@@ -1,11 +1,13 @@
 import React from 'react';
+// password hash // 20/11/2021
+import bcrypt from 'bcryptjs';
+
 import './css/Login.css';
 import { Redirect } from 'react-router-dom';
 import Toast from './Component/Toast.js';
 
 // context API
 import { myContext } from './ContextProvider';
-let err_label = null; // use ref
 
 const Login = () => {
 	const contextData = React.useContext(myContext);
@@ -14,7 +16,6 @@ const Login = () => {
 	const users = contextData.users;
 	const setUser = contextData.setUser;
 	const isLoggedIn = contextData.isLoggedIn;
-	const setLogin = contextData.setLogin;
 	const getUserNotes = contextData.getUserNotes;
 
 	const changeHandler = (event) => {
@@ -24,52 +25,52 @@ const Login = () => {
 		});
 	};
 
-	const loginHandler = (event) => {
+	const loginHandler = async (event) => {
 		let msg = '';
 		event.preventDefault();
 		// console.log('login Handler');
-		if (!user.username && !user.password) {
-			msg = 'Plz fill all fields.';
-		} else if (!user.username) {
-			msg = 'Plz fill all fields.';
-		} else if (!user.password) {
+		if (
+			(!user.username && !user.password) ||
+			!user.password ||
+			!user.username
+		) {
 			msg = 'Plz fill all fields.';
 		} else {
-			let passwords = [];
-			let usernames = [];
+			let passwords = [],
+				usernames = [];
 			for (let i = 0; i < users.length; i++) {
 				passwords[i] = users[i].password;
 				usernames[i] = users[i].username;
 			}
-			// console.log('passwords, usernames', passwords, usernames);
-			// console.log('user.username, usernames', user.username, user.password);
+			let user_index = usernames.indexOf(user.username);
+			console.log(user_index, users, usernames, passwords);
+			// username is present
+			if (user_index !== -1) {
+				// compare hash password to entered password is matched or not
+				const isMatch = await bcrypt.compare(
+					user.password,
+					passwords[user_index]
+				);
 
-			for (let i = 0; i < users.length; i++) {
-				let user_index = usernames.indexOf(user.username.trim(), i);
-				let pass_index = passwords.indexOf(user.password.trim(), i);
-				console.log('pass_index, user_index', pass_index, user_index);
-
-				if (
-					user_index !== -1 &&
-					pass_index !== -1 &&
-					user_index === pass_index
-				) {
-					setLogin(true);
+				if (isMatch) {
+					// if (passwords[user_index] === user.password) {
+					msg = 'Login successful';
+					contextData.setLogin(true);
+					contextData.setLogin(true);
 					getUserNotes();
+					contextData.setUser({ ...user, password: passwords[user_index] });
 					window.localStorage.setItem('username', user.username);
-					window.localStorage.setItem('password', user.password);
-					Toast.makeToast('Login successful', Toast.LONG);
-				} else if (user_index === -1) {
-					msg = 'No such user name';
-					break;
-				} else if (pass_index === -1) {
+					window.localStorage.setItem('password', passwords[user_index]);
+				} else {
 					msg = 'Wrong password.';
-					break;
 				}
+			} else {
+				msg = 'Login failed'; // for security purpose ->  we are not show the user name is available is our database
+				// msg = 'No such user name';
 			}
 		}
-		if (err_label) {
-			err_label.textContent = msg;
+		if (msg) {
+			Toast.makeToast(msg, Toast.LONG);
 		}
 	};
 
@@ -123,9 +124,6 @@ const Login = () => {
 									</button>
 								</div>
 							</form>
-							<div
-								className="text-center text-danger err_msg"
-								ref={(ele) => (err_label = ele)}></div>
 						</div>
 					</div>
 				</div>

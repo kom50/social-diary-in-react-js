@@ -1,5 +1,7 @@
 import React from 'react';
 import Toast from './Component/Toast.js';
+// Password hash
+import bcrypt from 'bcryptjs';
 import { myContext } from './ContextProvider';
 
 const CreateAccount = () => {
@@ -11,7 +13,9 @@ const CreateAccount = () => {
 		let value = event.target.value;
 		contextData.setNewUser({ ...newUser, [name]: value });
 	};
-	const submitHandler = (event) => {
+	const submitHandler = async (event) => {
+		event.preventDefault();
+
 		let msg = '';
 		console.log('submit button clicked');
 		if (
@@ -34,15 +38,15 @@ const CreateAccount = () => {
 			newUser.re_password &&
 			newUser.password === newUser.re_password
 		) {
-			contextData.postHandler(event, { ...newUser, isCreateUser: true });
+			delete newUser.re_password;
 
-			// set initial value
-			contextData.setNewUser({
-				username: '',
-				name: '',
-				email: '',
-				password: '',
-				re_password: '',
+			const hash_password = await bcrypt.hash(newUser.password, 10);
+
+			contextData.postHandler(event, {
+				...newUser,
+				password: hash_password,
+				isCreateUser: true,
+				timestamp: new Date().toLocaleString(),
 			});
 		} else if (
 			(!newUser.password && !newUser.re_password) ||
@@ -52,8 +56,9 @@ const CreateAccount = () => {
 		} else {
 			// Toast.makeToast('Plz fill all fields', Toast.LONG);
 		}
-		Toast.makeToast(msg, Toast.LONG);
-		event.preventDefault();
+		if (msg) {
+			Toast.makeToast(msg, Toast.LONG);
+		}
 	};
 	return (
 		<div className="container-fluid">
@@ -72,7 +77,7 @@ const CreateAccount = () => {
 									onChange={changeHandler}
 									required
 								/>
-								<label forhtml="username">Enter username </label>
+								<label htmlFor="username">Enter username </label>
 							</div>
 							<div className="form-floating mt-4">
 								<input
@@ -84,7 +89,7 @@ const CreateAccount = () => {
 									onChange={changeHandler}
 									required
 								/>
-								<label forhtml="name">Enter name </label>
+								<label htmlFor="name">Enter name </label>
 							</div>
 							<div className="form-floating mt-4">
 								<input
@@ -96,7 +101,7 @@ const CreateAccount = () => {
 									onChange={changeHandler}
 									required
 								/>
-								<label forhtml="email">Enter email </label>
+								<label htmlFor="email">Enter email </label>
 							</div>
 							<div className="form-floating mt-4">
 								<input
@@ -108,7 +113,7 @@ const CreateAccount = () => {
 									onChange={changeHandler}
 									required
 								/>
-								<label forhtml="password">Enter password </label>
+								<label htmlFor="password">Enter password </label>
 							</div>
 							<div className="form-floating mt-4">
 								<input
@@ -120,7 +125,7 @@ const CreateAccount = () => {
 									onChange={changeHandler}
 									required
 								/>
-								<label forhtml="re_password">Enter re-password </label>
+								<label htmlFor="re_password">Enter re-password </label>
 							</div>
 							<div>
 								<button
